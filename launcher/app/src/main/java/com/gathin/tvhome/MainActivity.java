@@ -14,6 +14,7 @@ import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
+import android.net.Uri;
 import android.net.NetworkCapabilities;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * tvOS style home: black, a pinned dock row, an app grid, and one glass highlight that springs between tiles.
@@ -67,6 +69,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean heroShown;
     private TextView greeting;
     private TextView btnWifi;
+    private boolean returnToJarvis;
     private SpringAnimation springX, springY;
     private float glassTargetX, glassTargetY;
     private boolean glassShown;
@@ -158,6 +161,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             s.setSpring(new SpringForce().setStiffness(260f).setDampingRatio(0.58f));
         }
 
+        TextView btnJarvis = findViewById(R.id.btnJarvis);
+        btnJarvis.setText(getString(R.string.jarvis_label));
+        btnJarvis.setOnClickListener(v -> openJarvis());
         View btnInputs = findViewById(R.id.btnInputs);
         View btnSettings = findViewById(R.id.btnSettings);
         btnInputs.setOnClickListener(v -> showInputs());
@@ -169,9 +175,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         View.OnKeyListener pillKeys = (v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP) return true;
-            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT && v.getId() == R.id.btnInputs) return true;
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT && v.getId() == R.id.btnJarvis) return true;
             return keyCode == KeyEvent.KEYCODE_DPAD_RIGHT && v.getId() == R.id.btnSettings;
         };
+        btnJarvis.setOnKeyListener(pillKeys);
         btnInputs.setOnKeyListener(pillKeys);
         btnWifi.setOnKeyListener(pillKeys);
         btnSettings.setOnKeyListener(pillKeys);
@@ -206,6 +213,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // Return to the app we left from, or the same slot if that app is gone. Always refocus: after
         // reload() the view that holds focus may no longer show the app it had.
         grid.post(() -> {
+            if (returnToJarvis) {
+                findViewById(R.id.btnJarvis).requestFocus();
+                returnToJarvis = false;
+                return;
+            }
             int pos = adapter.positionOf(returnKey);
             focusTile(pos >= 0 ? pos : returnSlot);
         });
@@ -227,6 +239,38 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     public void onBackPressed() {
         // Home screen: Back goes nowhere.
+    }
+
+    /** One optional entry to the existing agent workspace; no credentials or agent runtime on TV. */
+    private void openJarvis() {
+        String targetPackage = getString(R.string.jarvis_package).trim();
+        String targetUrl = getString(R.string.jarvis_url).trim();
+        Intent intent;
+        if (!targetPackage.isEmpty()) {
+            intent = getPackageManager().getLeanbackLaunchIntentForPackage(targetPackage);
+            if (intent == null) intent = getPackageManager().getLaunchIntentForPackage(targetPackage);
+            if (intent == null) {
+                Toast.makeText(this, R.string.jarvis_app_missing, Toast.LENGTH_LONG).show();
+                return;
+            }
+        } else if (!targetUrl.isEmpty()) {
+            Uri uri = Uri.parse(targetUrl);
+            if (!WorkspaceTarget.isWebUrl(targetUrl)) {
+                Toast.makeText(this, R.string.jarvis_unavailable, Toast.LENGTH_LONG).show();
+                return;
+            }
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        } else {
+            Toast.makeText(this, R.string.jarvis_not_connected, Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            startActivity(intent);
+            returnToJarvis = true;
+        } catch (ActivityNotFoundException | SecurityException e) {
+            Toast.makeText(this, R.string.jarvis_unavailable, Toast.LENGTH_LONG).show();
+        }
     }
 
     // ---- glass highlight -------------------------------------------------------------------------
@@ -466,7 +510,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 CharSequence l = info.loadLabel(this);
                 String label = l == null ? info.getId() : l.toString();
                 boolean hdmi = info.getType() == TvInputInfo.TYPE_HDMI;
-                if (hdmi && !label.toUpperCase().contains("HDMI")) label = "HDMI " + label;
+                if (hdmi && !label.toUpperCase(Locale.ROOT).contains("HDMI")) label = "HDMI " + label;
                 final String id = info.getId();
                 int state = hdmi && hdmiStateBogus ? -1 : tim.getInputState(id);
                 if (!hdmi && rows.getChildCount() > 0 && !sawNonHdmi) addSeparator(rows);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Home</string>
+    <string name="app_name">Android TV Harness</string>
     <string name="inputs">Quellen</string>
     <string name="wifi">WLAN</string>
     <string name="settings">Einstellungen</string>
@@ -19,4 +19,8 @@
     <string name="not_available">Auf diesem TV nicht verfügbar</string>
     <string name="cant_open">%1$s lässt sich nicht öffnen</string>
     <string name="date_format">EEEE, d. MMMM</string>
+    <string name="dream_name">Uhr</string>
+    <string name="jarvis_not_connected">J.A.R.V.I.S. ist noch nicht verbunden.</string>
+    <string name="jarvis_unavailable">Der J.A.R.V.I.S.-Arbeitsbereich ist auf diesem Fernseher nicht verfügbar.</string>
+    <string name="jarvis_app_missing">Die J.A.R.V.I.S.-App ist nicht installiert.</string>
 </resources>

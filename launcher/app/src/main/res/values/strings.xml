@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Home</string>
+    <string name="app_name">Android TV Harness</string>
     <string name="inputs">Inputs</string>
     <string name="wifi">Wi-Fi</string>
     <string name="settings">Settings</string>
@@ -20,4 +20,7 @@
     <string name="cant_open">Can\'t open %1$s</string>
     <string name="date_format">EEEE  d MMMM</string>
     <string name="dream_name">Clock</string>
+    <string name="jarvis_not_connected">J.A.R.V.I.S. isn\'t connected yet.</string>
+    <string name="jarvis_unavailable">J.A.R.V.I.S. workspace is unavailable on this TV.</string>
+    <string name="jarvis_app_missing">The J.A.R.V.I.S. workspace app is not installed.</string>
 </resources>

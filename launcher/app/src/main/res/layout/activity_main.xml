@@ -124,14 +124,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignBottom="@id/leftBlock"
-                android:layout_marginBottom="6dp"
+                android:layout_below="@id/leftBlock"
+                android:layout_marginTop="12dp"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnJarvis"
+                    style="@style/TopButton"
+                    android:text="@string/jarvis_label"
+                    android:drawableStart="@drawable/ic_jarvis"
+                    android:nextFocusRight="@id/btnInputs"
+                    android:nextFocusDown="@+id/grid" />
 
                 <TextView
                     android:id="@+id/btnInputs"
                     style="@style/TopButton"
                     android:text="@string/inputs"
+                    android:nextFocusLeft="@id/btnJarvis"
                     android:drawableStart="@drawable/ic_input"
                     android:nextFocusDown="@+id/grid" />
 

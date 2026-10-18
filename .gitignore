@@ -8,3 +8,7 @@ launcher/local.properties
 # your own TV's dumps (serial, android_id, device names) stay local
 backup/
 .DS_Store
+.state/
+artifacts/*.apk
+__pycache__/
+*.pyc

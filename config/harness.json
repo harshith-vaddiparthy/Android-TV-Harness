@@ -1,0 +1,14 @@
+{
+  "name": "Android TV Harness",
+  "version": "1.0.0",
+  "vertical": "android-tv-home-operations",
+  "runtime": "python3 -m harness",
+  "agent_transport": "optional stdio MCP",
+  "hermes_configured": false,
+  "instruction_file": "../prompts/system.md",
+  "domain_rules": "../domain/rules.md",
+  "workflow": "../workflows/primary.md",
+  "output_contract": "../domain/output-contract.md",
+  "launcher_profile": "launcher.json",
+  "configuration_role": "descriptive manifest; enforcement is harness/core.py"
+}

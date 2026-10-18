@@ -1,0 +1,7 @@
+{
+  "dock_apps": ["com.netflix.ninja", "com.amazon.amazonvideo.livingroom", "com.google.android.youtube.tv", "in.startv.hotstar"],
+  "hidden_apps": ["com.mediatek.wwtv.tvcenter", "com.mitv.gallery"],
+  "live_tv_package": "com.mediatek.wwtv.tvcenter",
+  "columns": 4,
+  "jarvis": {"label": "@J.A.R.V.I.S.", "url": "", "package": ""}
+}
